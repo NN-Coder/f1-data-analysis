@@ -2,9 +2,12 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from pathlib import Path
+
+DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 
 # APG - average positions gained
-f1 = pd.read_csv('results.csv') # reading results csv file into Pandas dataframe
+f1 = pd.read_csv(DATA_DIR / 'results.csv') # reading results csv file into Pandas dataframe
 f1 = f1[['constructorId', 'grid', 'positionOrder']] # only using the three columns we need
 f1.columns = ['teamId', 'startPos', 'endPos'] # renaming columns
 f1['positionsGained'] = f1['startPos'] - f1['endPos'] # creating new column with positions gained
@@ -19,7 +22,7 @@ min_entries_required = 150 # increase this value to get data for more prevalent 
 
 if min_entries_required <= total_teams['totalEntries'].max(): # checking that the requirement is within limits
   sat_teams = total_teams[total_teams['totalEntries'] >= min_entries_required].reset_index(drop = True) # creating new dataframe with only teams that satisfy the entries requirement
-  team_names = pd.read_csv('constructors.csv') # reading constructors csv file into Pandas dataframe
+  team_names = pd.read_csv(DATA_DIR / 'constructors.csv') # reading constructors csv file into Pandas dataframe
   sat_teams = pd.merge(sat_teams, team_names[['constructorId', 'name', 'nationality']], left_on = 'teamId', right_on = 'constructorId', how = 'left') # combining team names and nationalities with the main dataframe
   sat_teams = sat_teams[['teamId', 'name', 'nationality', 'APG', 'totalEntries']] # selecting and reordering columns
   ht_apg = round(sat_teams['APG'].max(), 2) # finding the APG of the team with the highest APG and rounding for ease of viewing
