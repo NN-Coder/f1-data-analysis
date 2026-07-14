@@ -1,7 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-f1 = pd.read_csv('results.csv')
+from pathlib import Path
+
+DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+
+f1 = pd.read_csv(DATA_DIR / 'results.csv')
 f1 = f1[['constructorId', 'grid', 'positionOrder']].copy()
 f1.columns = ['teamId', 'startPos', 'endPos']
 f1['positionsGained'] = f1['startPos'] - f1['endPos']
@@ -10,7 +14,7 @@ total_teams.columns = ['teamId', 'APG']
 team_entries = f1['teamId'].value_counts().reset_index()
 team_entries.columns = ['teamId', 'totalEntries']
 plot_data = pd.merge(total_teams, team_entries, on='teamId', how='left')
-team_names = pd.read_csv('constructors.csv')
+team_names = pd.read_csv(DATA_DIR / 'constructors.csv')
 plot_data = pd.merge(plot_data, team_names[['constructorId', 'name']], left_on='teamId', right_on='constructorId', how='left')
 plt.figure(figsize=(11, 6))
 sns.set_theme(style="whitegrid")
