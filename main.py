@@ -1,5 +1,7 @@
 import requests
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # APG - average positions gained
 f1 = pd.read_csv('results.csv') # reading results csv file into Pandas dataframe
@@ -35,3 +37,11 @@ if min_entries_required <= total_teams['totalEntries'].max(): # checking that th
   print(top_teams.to_string())
 else: # Notify user of invalid entry requirement rather than throwing an error
   print(f"Your chosen minimum team entry requirement, {min_entries_required}, exceeds the top entry limit. Please decrease it to avoid errors.")
+
+# Bar Graph with Top F1 Teams by APG
+plt.figure(figsize=(10, 6))
+sns.barplot(x='APG', y='name', data=top_teams, palette='coolwarm')
+plt.title('Top F1 Teams by Average Positions Gained')
+plt.xlabel('Average Positions Gained (APG)')
+plt.ylabel('Team Name')
+plt.show()
